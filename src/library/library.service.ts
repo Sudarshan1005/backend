@@ -98,4 +98,24 @@ export class LibraryService {
       return `Thank you for checking out, ${student.name}! Please come again.`;
     }
   }
+
+  async getLibraryRecordById(id: number): Promise<LibraryRecord> {
+    const record = await this.libraryRecordRepository.findOne({ where: { id } });
+    if (!record) {
+      throw new NotFoundException('Library record not found');
+    }
+    return record;
+  }
+
+  async updateLibraryRecord(id: number, data: Partial<LibraryRecord>): Promise<LibraryRecord> {
+    let record = await this.getLibraryRecordById(id);
+    record = { ...record, ...data };
+    await this.libraryRecordRepository.save(record);
+    return record;
+  }
+
+  async deleteLibraryRecord(id: number): Promise<void> {
+    const record = await this.getLibraryRecordById(id);
+    await this.libraryRecordRepository.remove(record);
+  }
 }

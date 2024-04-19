@@ -28,8 +28,9 @@
 //     }
 //   }
 // }
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Param, Delete, Put, Get } from '@nestjs/common';
 import { LibraryService } from './library.service';
+import { LibraryRecord } from './library.entity';
 
 @Controller('library')
 export class LibraryController {
@@ -43,5 +44,20 @@ export class LibraryController {
     } catch (error) {
       return `Error: ${error.message}`;
     }
+  }
+
+  @Get(':id')
+  async getLibraryRecord(@Param('id') id: number): Promise<LibraryRecord> {
+    return this.libraryService.getLibraryRecordById(id);
+  }
+
+  @Put(':id')
+  async updateLibraryRecord(@Param('id') id: number, @Body() data: Partial<LibraryRecord>): Promise<LibraryRecord> {
+    return this.libraryService.updateLibraryRecord(id, data);
+  }
+
+  @Delete(':id')
+  async deleteLibraryRecord(@Param('id') id: number): Promise<void> {
+    return this.libraryService.deleteLibraryRecord(id);
   }
 }
